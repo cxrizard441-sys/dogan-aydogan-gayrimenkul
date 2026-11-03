@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Doğan Aydoğan Gayrimenkul | Admin</title>
+</head>
+<body style="font-family:Arial;background:#f4f4f4;padding:20px">
+<h1>DOĞAN AYDOĞAN GAYRİMENKUL</h1>
+<h2>Yönetici Paneli</h2>
+
+<div id="login">
+<input id="email" type="email" placeholder="E-posta"><br><br>
+<input id="password" type="password" placeholder="Şifre"><br><br>
+<button onclick="login()">Giriş Yap</button>
+</div>
+
+<div id="panel" style="display:none">
+<h2>Yeni İlan Ekle</h2>
+<input id="title" placeholder="İlan başlığı"><br><br>
+<input id="price" type="number" placeholder="Fiyat"><br><br>
+<input id="location" placeholder="Konum"><br><br>
+<textarea id="description" placeholder="Açıklama"></textarea><br><br>
+<button onclick="addProperty()">İlanı Kaydet</button>
+<button onclick="logout()">Çıkış</button>
+<h2>İlanlarım</h2>
+<div id="list"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const db = supabase.createClient(
+"https://wnululhsotwjfwhrtzwj.supabase.co",
+"sb_publishable_epHhCf6NdasScFDBIcSaOg_TKOjjjkO"
+);
+
+async function login(){
+const {error}=await db.auth.signInWithPassword({
+email:document.getElementById("email").value,
+password:document.getElementById("password").value
+});
+if(error){alert("Giriş başarısız: "+error.message);return;}
+document.getElementById("login").style.display="none";
+document.getElementById("panel").style.display="block";
+loadProperties();
+}
+
+async function logout(){
+await db.auth.signOut();
+location.reload();
+}
+
+async function addProperty(){
+const {error}=await db.from("properties").insert({
+title:document.getElementById("title").value,
+price:Number(document.getElementById("price").value),
+location:document.getElementById("location").value,
+description:document.getElementById("description").value
+});
+if(error){alert(error.message);return;}
+alert("İlan kaydedildi!");
+loadProperties();
+}
+
+async function loadProperties(){
+const {data,error}=await db.from("properties").select("*");
+if(error){alert(error.message);return;}
+document.getElementById("list").innerHTML=data.map(p=>
+`<div style="background:white;padding:15px;margin:10px">
+<h3>${p.title}</h3>
+<p>${p.location||""}</p>
+<strong>${p.price||""} ₺</strong>
+</div>`
+).join("");
+}
+</script>
+</body>
+</html>
