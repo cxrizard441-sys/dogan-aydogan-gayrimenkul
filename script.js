@@ -1,29 +1,71 @@
-// Doğan Aydoğan Gayrimenkul — site etkileşimleri
-const menuToggle = document.getElementById('menuToggle');
-const nav = document.getElementById('nav');
-menuToggle?.addEventListener('click', () => {
-  const isOpen = nav.classList.toggle('open');
-  menuToggle.setAttribute('aria-expanded', String(isOpen));
-});
-nav?.querySelectorAll('a').forEach(link => link.addEventListener('click', () => nav.classList.remove('open')));
-document.getElementById('year').textContent = new Date().getFullYear();
 
-// İlanlar Supabase veya yönetim paneline bağlandığında bu filtre gerçek kayıtları süzecek.
-// Şimdilik kullanıcıya iletişim bölümünü gösteren güvenli bir demo davranışı vardır.
-document.getElementById('searchForm')?.addEventListener('submit', (event) => {
-  event.preventDefault();
-  const location = document.getElementById('location').value.trim();
-  const grid = document.getElementById('listingGrid');
-  grid.innerHTML = `
-    <article class="empty-state">
-      <span>DA</span>
-      <h3>${location ? `${escapeHTML(location)} için` : 'Aramanız için'} portföyümüzü birlikte değerlendirelim.</h3>
-      <p>Güncel ilanlar ve size özel fırsatlar için danışmanımızla iletişime geçin.</p>
-      <a href="#iletisim">Danışmanımıza ulaşın ↗</a>
-    </article>`;
+const SUPABASE_URL = "https://wnululhsotwjfwhrtzwj.supabase.co";
+const SUPABASE_KEY = "sb_publishable_epHhCf6NdasScFDBIcSaOg_TKOjjjkO";
+
+const supabaseClient = supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+const menuToggle = document.getElementById("menuToggle");
+const nav = document.getElementById("nav");
+
+menuToggle?.addEventListener("click", () => {
+  const isOpen = nav.classList.toggle("open");
+  menuToggle.setAttribute("aria-expanded", String(isOpen));
 });
-function escapeHTML(value) {
-  return value.replace(/[&<>"']/g, char => ({
-    '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
-  }[char]));
+
+nav?.querySelectorAll("a").forEach(link => {
+  link.addEventListener("click", () => {
+    nav.classList.remove("open");
+  });
+});
+
+document.getElementById("year").textContent =
+  new Date().getFullYear();
+
+async function loadProperties() {
+  const grid = document.getElementById("listingGrid");
+
+  if (!grid) return;
+
+  const { data, error } = await supabaseClient
+    .from("properties")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("İlanlar yüklenemedi:", error.message);
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    grid.innerHTML = `
+      <article class="empty-state">
+        <span>DA</span>
+        <h3>Henüz ilan bulunmuyor.</h3>
+        <p>Yeni ilanlarımız çok yakında burada.</p>
+      </article>
+    `;
+    return;
+  }
+
+  grid.innerHTML = data.map(property => `
+    <article class="property-card">
+      <h3>${escapeHTML(property.title || "")}</h3>
+      <p>${escapeHTML(property.description || "")}</p>
+    </article>
+  `).join("");
 }
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[char]);
+}
+
+loadProperties();
