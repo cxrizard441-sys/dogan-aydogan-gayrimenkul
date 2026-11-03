@@ -1,10 +1,9 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101a22">
-  <meta name="description" content="Doğan Aydoğan Gayrimenkul — Mardin'de güvenilir gayrimenkul danışmanlığı. Satılık ve kiralık portföyü keşfedin.">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Doğan Aydoğan Gayrimenkul — Mardin'de güvenilir emlak danışmanlığı. Satılık ve kiralık konut, arsa ve iş yeri.">
   <title>Doğan Aydoğan Gayrimenkul | Mardin</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,67 +11,61 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="announcement">MARDİN'DE GÜVENİLİR GAYRİMENKUL DANIŞMANLIĞI <span>•</span> Doğru yatırım, doğru adres.</div>
-  <header class="site-header">
-    <a class="brand" href="#" aria-label="Ana sayfa">
-      <span class="brand-mark">DA<span>◆</span></span>
-      <span class="brand-copy"><strong>DOĞAN AYDOĞAN</strong><small>GAYRİMENKUL</small></span>
+  <div class="topline">MARDİN’DE GÜVENİLİR GAYRİMENKUL DANIŞMANLIĞI <span>Doğru yatırım, doğru adres.</span></div>
+  <header class="header">
+    <a class="brand" href="#anasayfa" aria-label="Doğan Aydoğan Gayrimenkul ana sayfa">
+      <span class="brand-mark">DA</span>
+      <span class="brand-text"><strong>DOĞAN AYDOĞAN</strong><small>G A Y R İ M E N K U L</small></span>
     </a>
-    <button class="menu-toggle" id="menuToggle" aria-label="Menüyü aç" aria-expanded="false">☰</button>
-    <nav id="nav">
+    <nav class="nav" id="nav">
       <a href="#portfoy">Portföy</a><a href="#hakkimizda">Hakkımızda</a><a href="#hizmetler">Hizmetler</a><a href="#iletisim">İletişim</a>
-      <a class="nav-cta" href="#iletisim">Bize ulaşın <span>↗</span></a>
+      <a class="nav-cta" href="#iletisim">Bize Ulaşın <span>↗</span></a>
     </nav>
+    <button class="menu-toggle" id="menuToggle" aria-label="Menüyü aç">☰</button>
   </header>
 
   <main>
-    <section class="hero">
-      <div class="hero-grid">
-        <div class="hero-content">
-          <div class="eyebrow"><span class="eyebrow-line"></span> MARDİN • GAYRİMENKUL</div>
-          <h1>Yeni bir başlangıç,<br><em>doğru bir adres.</em></h1>
-          <p>Hayalinizdeki yaşam alanını ve geleceğinize değer katacak yatırımı birlikte bulalım.</p>
-          <div class="hero-actions"><a class="button button-gold" href="#portfoy">Portföyü keşfedin <span>↗</span></a><a class="text-link" href="#hakkimizda">Bizi tanıyın <span>→</span></a></div>
-          <div class="hero-stats"><div><strong>Yerel</strong><span>Mardin uzmanlığı</span></div><div><strong>Şeffaf</strong><span>Güven odaklı süreç</span></div><div><strong>Yanınızda</strong><span>Başından sonuna</span></div></div>
-        </div>
-        <div class="hero-visual">
-          <div class="hero-image" role="img" aria-label="Mardin taş mimarisi ve şehir manzarası"></div>
-          <div class="image-caption"><span class="caption-dot"></span><span><strong>Mardin'i tanıyoruz.</strong><small>Değerini birlikte keşfedelim.</small></span><span class="caption-arrow">↗</span></div>
-          <div class="vertical-label">DOĞRU YER • DOĞRU ZAMAN</div>
-        </div>
+    <section class="hero" id="anasayfa">
+      <div class="hero-copy">
+        <div class="eyebrow"><span></span> MARDİN · GAYRİMENKUL</div>
+        <h1>Yeni bir<br>başlangıç,<br><em>doğru bir adres.</em></h1>
+        <p>Hayalinizdeki yaşam alanını ve geleceğinize değer katacak yatırım fırsatlarını birlikte bulalım.</p>
+        <div class="hero-actions"><a class="button gold" href="#portfoy">Portföyü keşfedin <span>↗</span></a><a class="text-link" href="#hakkimizda">Bizi tanıyın</a></div>
+        <div class="values"><div><b>Yerel</b><small>Mardin uzmanlığı</small></div><div><b>Şeffaf</b><small>Güven odaklı süreç</small></div><div><b>Yanınızda</b><small>Baştan sona</small></div></div>
       </div>
-      <div class="hero-bottom"><span>EV • ARSA • İŞ YERİ</span><span>01 — 04</span></div>
+      <div class="hero-visual">
+        <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1100&q=85" alt="Modern şehir mimarisi">
+        <div class="image-note"><span class="dot"></span><div><strong>Mardin’i tanıyoruz.</strong><small>Değerini birlikte keşfedelim.</small></div><span class="note-arrow">↗</span></div>
+        <div class="vertical-note">DOĞRU YER · DOĞRU ZAMAN</div>
+      </div>
+      <div class="hero-bottom"><span>EV&nbsp; · &nbsp;ARSA&nbsp; · &nbsp;İŞ YERİ</span><span>01 — 04</span></div>
     </section>
 
-    <section class="search-section" aria-label="Portföy filtreleri">
-      <div class="search-heading"><span>PORTFÖYDE ARAYIN</span><strong>Size uygun mülkü bulun</strong></div>
-      <div class="filters">
-        <label>İşlem türü<select id="typeFilter"><option value="all">Tümü</option><option value="Satılık">Satılık</option><option value="Kiralık">Kiralık</option></select></label>
-        <label>Gayrimenkul<select id="categoryFilter"><option value="all">Tüm kategoriler</option><option value="Konut">Konut</option><option value="Arsa">Arsa</option><option value="İş yeri">İş yeri</option></select></label>
-        <label>Konum<input id="locationFilter" type="search" placeholder="Örn. Kızıltepe, Mardin"></label>
-        <button class="button button-dark" id="searchBtn">İlanları göster <span>↗</span></button>
+    <section class="search-section" id="portfoy">
+      <div class="section-kicker">PORTFÖYDE ARAYIN</div><h2>Size uygun mülkü bulun</h2>
+      <form class="search-form" id="searchForm">
+        <label>İşlem tür<select id="transaction"><option value="all">Tümü</option><option value="sale">Satılık</option><option value="rent">Kiralık</option></select></label>
+        <label>Gayrimenkul<select id="propertyType"><option value="all">Tüm kategoriler</option><option value="home">Konut</option><option value="land">Arsa</option><option value="work">İş yeri</option></select></label>
+        <label class="location-field">Konum<input id="location" type="search" placeholder="Örn. Kızıltepe, Mardin"></label>
+        <button class="button dark search-button" type="submit">İlanları göster <span>↗</span></button>
+      </form>
+      <p class="demo-note">Portföy ilanları eklendikçe burada görüntülenecek.</p>
+      <div class="listing-grid" id="listingGrid">
+        <article class="empty-state"><span>DA</span><h3>Yeni fırsatlar yakında burada</h3><p>Aradığınız mülk için bizimle iletişime geçin.</p><a href="#iletisim">Danışmanımıza ulaşın ↗</a></article>
       </div>
-    </section>
-
-    <section class="section portfolio" id="portfoy">
-      <div class="section-head"><div><div class="eyebrow"><span class="eyebrow-line"></span> SEÇKİ PORTFÖYÜMÜZ</div><h2>Öne çıkan <em>gayrimenkuller</em></h2></div><a class="text-link" href="#iletisim">Portföyünüzü bize ekleyin <span>→</span></a></div>
-      <div class="listing-grid" id="listingGrid"></div>
-      <p class="demo-note">Portföydeki örnek ilanlar tasarım amaçlıdır. Gerçek ilanlar ve fiyatlar yönetim aşamasında eklenecektir.</p>
     </section>
 
     <section class="about-section" id="hakkimizda">
-      <div class="about-visual"><div class="about-photo"></div><div class="about-stamp">MARDİN'İN<br><strong>YEREL GÜCÜ</strong><span>◆</span></div></div>
-      <div class="about-copy"><div class="eyebrow"><span class="eyebrow-line"></span> BİZ KİMİZ?</div><h2>Gayrimenkulden<br><em>fazlası: güven.</em></h2><p>Doğan Aydoğan Gayrimenkul olarak Mardin ve çevresinde; doğru bilgi, şeffaf iletişim ve ihtiyaçlarınızı anlayan danışmanlıkla yanınızdayız.</p><p>Her mülkün bir hikâyesi, her kararın bir geleceği olduğuna inanıyoruz. Size sadece seçenek sunmuyor, karar sürecinizde yol arkadaşlığı yapıyoruz.</p><a class="button button-outline" href="#iletisim">Tanışalım <span>↗</span></a></div>
+      <div class="about-label">HAKKIMIZDA</div><div class="about-content"><h2>Gayrimenkulde güven,<br><em>ilişkide samimiyet.</em></h2><p>Doğan Aydoğan Gayrimenkul olarak Mardin ve çevresinde doğru bilgi, şeffaf iletişim ve güven esaslı danışmanlık anlayışıyla hizmet veriyoruz. Her müşterimizin ihtiyacını dinliyor, en doğru seçeneği birlikte değerlendiriyoruz.</p><a class="text-link" href="#iletisim">Hikâyemizi konuşalım ↗</a></div>
     </section>
 
-    <section class="services section" id="hizmetler">
-      <div class="section-head"><div><div class="eyebrow"><span class="eyebrow-line"></span> NASIL YARDIMCI OLUYORUZ?</div><h2>Her adımda <em>yanınızdayız.</em></h2></div></div>
-      <div class="service-grid"><article><span class="service-number">01</span><div class="service-icon">⌂</div><h3>Alım & Satım</h3><p>İhtiyacınıza ve bütçenize uygun seçenekleri birlikte değerlendirelim.</p><span class="service-arrow">↗</span></article><article><span class="service-number">02</span><div class="service-icon">▤</div><h3>Kiralama</h3><p>Yaşamınıza veya işinize uygun doğru alanı güvenle bulun.</p><span class="service-arrow">↗</span></article><article><span class="service-number">03</span><div class="service-icon">⌖</div><h3>Arsa & Yatırım</h3><p>Bölge bilgisi ve ihtiyaçlarınız doğrultusunda yatırım seçenekleri.</p><span class="service-arrow">↗</span></article><article><span class="service-number">04</span><div class="service-icon">◇</div><h3>Değerleme & Danışmanlık</h3><p>Mülkünüz ve kararınız için gerçekçi, anlaşılır danışmanlık.</p><span class="service-arrow">↗</span></article></div>
+    <section class="services" id="hizmetler"><div class="section-kicker">NASIL YARDIMCI OLUYORUZ?</div><h2>Her adımda yanınızdayız.</h2>
+      <div class="service-grid"><article><span>01</span><h3>Alım & Satım</h3><p>İhtiyacınıza uygun mülkü bulun, süreci güvenle tamamlayın.</p></article><article><span>02</span><h3>Kiralama</h3><p>Doğru kiracı ve doğru mülk için profesyonel destek.</p></article><article><span>03</span><h3>Arsa & Yatırım</h3><p>Potansiyeli değerlendirin, kararınızı sağlam bilgiyle verin.</p></article></div>
     </section>
 
-    <section class="contact-section" id="iletisim"><div class="contact-inner"><div class="eyebrow"><span class="eyebrow-line"></span> BİRLİKTE BAŞLAYALIM</div><h2>Bir mülk arıyorsunuz.<br><em>Biz de sizi dinliyoruz.</em></h2><p>İhtiyacınızı anlatın. Size en kısa zamanda dönüş yapalım.</p><div class="contact-actions"><a class="button button-gold" id="whatsappLink" href="#" target="_blank" rel="noopener">WhatsApp'tan yazın <span>↗</span></a><a class="button button-light" href="mailto:info@doganaydogangayrimenkul.com">E-posta gönder <span>↗</span></a></div><small class="contact-small">Telefon ve WhatsApp bilgisi site ayarlarından güncellenecektir.</small></div></section>
+    <section class="contact-section" id="iletisim"><div><div class="section-kicker">İLETİŞİM</div><h2>Birlikte doğru<br><em>adımı atalım.</em></h2><p>Gayrimenkul hedefinizi bize anlatın. Sizinle tanışmaktan memnuniyet duyarız.</p></div><div class="contact-card"><strong>Doğan Aydoğan</strong><span>Gayrimenkul Danışmanı · Mardin</span><a href="https://wa.me/905XXXXXXXXX" class="button gold" target="_blank" rel="noopener">WhatsApp’tan yazın ↗</a><small>Telefon numarası bağlantısını kendi numaranızla güncelleyin.</small></div></section>
   </main>
-  <footer><a class="brand brand-footer" href="#"><span class="brand-mark">DA<span>◆</span></span><span class="brand-copy"><strong>DOĞAN AYDOĞAN</strong><small>GAYRİMENKUL</small></span></a><span>© <span id="year"></span> Doğan Aydoğan Gayrimenkul. Tüm hakları saklıdır.</span><a href="#top">Yukarı çık ↑</a></footer>
+  <footer><a class="brand footer-brand" href="#anasayfa"><span class="brand-mark">DA</span><span class="brand-text"><strong>DOĞAN AYDOĞAN</strong><small>G A Y R İ M E N K U L</small></span></a><span>© <span id="year"></span> Doğan Aydoğan Gayrimenkul. Tüm hakları saklıdır.</span><a href="#anasayfa">Başa dön ↑</a></footer>
   <script src="script.js"></script>
 </body>
 </html>
