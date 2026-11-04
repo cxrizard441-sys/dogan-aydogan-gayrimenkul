@@ -69,5 +69,48 @@
   <script src="script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase.js"></script>
+  
+<script>
+(async function () {
+  const grid = document.getElementById("listingGrid");
+  if (!grid || !window.supabaseClient) return;
+
+  const { data: ilanlar, error } = await window.supabaseClient
+    .from("properties")
+    .select("*");
+
+  if (error) {
+    console.error("İlanlar yüklenemedi:", error.message);
+    return;
+  }
+
+  if (!ilanlar || ilanlar.length === 0) return;
+
+  grid.innerHTML = "";
+
+  ilanlar.forEach(function (ilan) {
+    const kart = document.createElement("article");
+    kart.className = "property-card";
+
+    const baslik = document.createElement("h3");
+    baslik.textContent = ilan.title || "Satılık / Kiralık Gayrimenkul";
+
+    const konum = document.createElement("p");
+    konum.textContent = ilan.location || "";
+
+    const fiyat = document.createElement("p");
+    fiyat.textContent = ilan.price
+      ? Number(ilan.price).toLocaleString("tr-TR") + " ₺"
+      : "Fiyat için iletişime geçiniz";
+
+    const aciklama = document.createElement("p");
+    aciklama.textContent = ilan.description || "";
+
+    kart.append(baslik, konum, fiyat, aciklama);
+    grid.appendChild(kart);
+  });
+})();
+</script>
+
 </body>
 </html>
