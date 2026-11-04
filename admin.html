@@ -3,336 +3,324 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Doğan Aydoğan | Yönetim Paneli</title>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
 *{box-sizing:border-box}
-body{
-  margin:0;
-  background:#f4f1eb;
-  color:#171717;
-  font-family:Arial,sans-serif;
-}
-header{
-  background:#111820;
-  color:white;
-  padding:22px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-header h2{margin:0;font-size:20px}
-header button{background:#c6a269;color:#111}
-.container{max-width:1100px;margin:30px auto;padding:20px}
-.card{
-  background:white;
-  padding:25px;
-  border-radius:8px;
-  margin-bottom:25px;
-  box-shadow:0 4px 20px #00000008;
-}
-h3{margin-top:0}
-input,select,textarea{
-  width:100%;
-  padding:13px;
-  margin:8px 0 16px;
-  border:1px solid #ddd;
-  border-radius:5px;
-  font-size:15px;
-}
-textarea{min-height:110px;resize:vertical}
-button{
-  padding:13px 20px;
-  border:0;
-  border-radius:5px;
-  background:#c6a269;
-  cursor:pointer;
-  font-weight:bold;
-}
-button:hover{opacity:.85}
+body{margin:0;background:#f4f1eb;color:#171717;font-family:Arial,sans-serif}
+header{background:#111820;color:#fff;padding:20px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+header h2{font-size:18px;margin:0}
+button{border:0;padding:12px 18px;background:#c6a269;color:#111;font-weight:bold;cursor:pointer;border-radius:4px}
 .logout{background:#333;color:white}
-.listing{
-  border:1px solid #eee;
-  padding:18px;
-  border-radius:6px;
-  margin:12px 0;
-}
-.listing h4{margin:0 0 8px;font-size:18px}
-.actions{display:flex;gap:10px;margin-top:12px}
-.delete{background:#b83232;color:white}
-.edit{background:#222;color:white}
-#status{margin:12px 0;font-weight:bold}
+.container{max-width:1000px;margin:25px auto;padding:15px}
+.card{background:white;padding:25px;border-radius:8px;margin-bottom:22px;box-shadow:0 4px 20px #00000008}
+input,select,textarea{width:100%;padding:13px;margin:8px 0 16px;border:1px solid #ddd;border-radius:4px;font-size:15px}
+textarea{min-height:100px;resize:vertical}
+label{font-size:13px;font-weight:bold}
 .hidden{display:none}
+#status{font-weight:bold;margin:12px 0}
+.listing{border:1px solid #e8e8e8;padding:18px;border-radius:6px;margin:12px 0}
+.listing h3{margin:0 0 8px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.edit{background:#222;color:white}
+.delete{background:#b83232;color:white}
+.photos{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.photos img{width:100px;height:80px;object-fit:cover;border-radius:4px}
+#saveBtn:disabled{opacity:.5}
 </style>
 </head>
-
 <body>
 
 <header>
-  <h2>DOĞAN AYDOĞAN GAYRİMENKUL</h2>
-  <button class="logout" onclick="logout()">Çıkış Yap</button>
+<h2>DOĞAN AYDOĞAN GAYRİMENKUL</h2>
+<button class="logout" onclick="logout()">Çıkış Yap</button>
 </header>
 
 <div class="container">
 
-  <div class="card" id="loginCard">
-    <h3>Yönetici Girişi</h3>
-    <input id="email" type="email" placeholder="E-posta adresiniz">
-    <input id="password" type="password" placeholder="Şifreniz">
-    <button onclick="login()">Giriş Yap</button>
-    <p id="loginStatus"></p>
-  </div>
+<div class="card" id="loginCard">
+<h3>Yönetici Girişi</h3>
+<input id="email" type="email" placeholder="E-posta adresiniz">
+<input id="password" type="password" placeholder="Şifreniz">
+<button onclick="login()">Giriş Yap</button>
+<p id="loginStatus"></p>
+</div>
 
-  <div class="card hidden" id="panel">
-    <h3 id="formTitle">Yeni İlan Ekle</h3>
+<div class="card hidden" id="panel">
+<h3 id="formTitle">Yeni İlan Ekle</h3>
 
-    <form id="propertyForm">
-      <input id="title" placeholder="İlan başlığı" required>
+<form id="propertyForm">
+<input id="title" placeholder="İlan başlığı" required>
 
-      <select id="type" required>
-        <option value="">İlan türü seçin</option>
-        <option value="Satılık">Satılık</option>
-        <option value="Kiralık">Kiralık</option>
-      </select>
+<select id="type" required>
+<option value="">İlan türü</option>
+<option>Satılık</option>
+<option>Kiralık</option>
+</select>
 
-      <select id="category" required>
-        <option value="">Gayrimenkul türü</option>
-        <option value="Daire">Daire</option>
-        <option value="Villa">Villa</option>
-        <option value="Arsa">Arsa</option>
-        <option value="İş Yeri">İş Yeri</option>
-        <option value="Tarla">Tarla</option>
-        <option value="Bina">Bina</option>
-        <option value="Diğer">Diğer</option>
-      </select>
+<select id="category" required>
+<option value="">Gayrimenkul türü</option>
+<option>Daire</option>
+<option>Villa</option>
+<option>Arsa</option>
+<option>İş Yeri</option>
+<option>Tarla</option>
+<option>Bina</option>
+<option>Diğer</option>
+</select>
 
-      <input id="price" type="number" placeholder="Fiyat (₺)" required>
-      <input id="location" placeholder="Konum (Örn: Mardin / Kızıltepe)" required>
-      <input id="rooms" placeholder="Oda sayısı (Örn: 3+1)">
-      <input id="area" type="number" placeholder="Metrekare (m²)">
+<input id="price" type="number" placeholder="Fiyat (₺)" required>
+<input id="location" placeholder="Konum (Mardin / Kızıltepe)" required>
+<input id="rooms" placeholder="Oda sayısı (3+1)">
+<input id="area" type="number" placeholder="Metrekare (m²)">
+<textarea id="description" placeholder="İlan açıklaması"></textarea>
 
-      <textarea id="description" placeholder="İlan açıklaması"></textarea>
+<label>İlan fotoğrafları (Birden fazla seçebilirsiniz)</label>
+<input id="photos" type="file" accept="image/*" multiple>
 
-      <label>İlan fotoğrafı</label>
-      <input id="photo" type="file" accept="image/*">
+<div id="currentPhotos" class="photos"></div>
 
-      <button type="submit" id="saveBtn">İlanı Kaydet</button>
-      <button type="button" onclick="resetForm()" style="background:#ddd">Temizle</button>
+<button type="submit" id="saveBtn">İlanı Kaydet</button>
+<button type="button" onclick="resetForm()" style="background:#ddd">Temizle</button>
+<p id="status"></p>
+</form>
+</div>
 
-      <p id="status"></p>
-    </form>
-  </div>
-
-  <div class="card hidden" id="listingCard">
-    <h3>Yayındaki İlanlar</h3>
-    <div id="list">İlanlar yükleniyor...</div>
-  </div>
+<div class="card hidden" id="listingCard">
+<h3>İlanlarım</h3>
+<div id="list">Yükleniyor...</div>
+</div>
 
 </div>
 
 <script>
-const SUPABASE_URL = "https://wnululhsotwjfwhrtzwj.supabase.co";
-const SUPABASE_KEY = "sb_publishable_epHhCf6NdasScFDBIcSaOg_TKOjjjkO";
+const SUPABASE_URL="https://wnululhsotwjfwhrtzwj.supabase.co";
+const SUPABASE_KEY="sb_publishable_epHhCf6NdasScFDBIcSaOg_TKOjjjkO";
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 
-const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-let editingId = null;
+let editingId=null;
+let existingImages=[];
 
 async function login(){
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value;
-
-  const {data,error} = await db.auth.signInWithPassword({email,password});
-
-  if(error){
-    document.getElementById("loginStatus").textContent = error.message;
-    return;
-  }
-
-  showPanel();
+ const email=document.getElementById("email").value.trim();
+ const password=document.getElementById("password").value;
+ const {error}=await db.auth.signInWithPassword({email,password});
+ if(error){
+  document.getElementById("loginStatus").textContent="Giriş başarısız: "+error.message;
+  return;
+ }
+ showPanel();
 }
 
 async function showPanel(){
-  document.getElementById("loginCard").classList.add("hidden");
-  document.getElementById("panel").classList.remove("hidden");
-  document.getElementById("listingCard").classList.remove("hidden");
-  loadProperties();
+ document.getElementById("loginCard").classList.add("hidden");
+ document.getElementById("panel").classList.remove("hidden");
+ document.getElementById("listingCard").classList.remove("hidden");
+ loadProperties();
 }
 
 async function logout(){
-  await db.auth.signOut();
-  location.reload();
+ await db.auth.signOut();
+ location.reload();
 }
 
 async function loadProperties(){
-  const {data,error} = await db
-    .from("properties")
-    .select("*")
-    .order("created_at",{ascending:false});
+ const list=document.getElementById("list");
+ list.textContent="İlanlar yükleniyor...";
 
-  if(error){
-    document.getElementById("list").textContent = error.message;
-    return;
-  }
+ const {data,error}=await db.from("properties").select("*");
 
-  const list = document.getElementById("list");
+ if(error){
+  list.textContent="İlanlar yüklenemedi: "+error.message;
+  return;
+ }
 
-  if(!data || data.length===0){
-    list.innerHTML="<p>Henüz ilan bulunmuyor.</p>";
-    return;
-  }
+ if(!data||!data.length){
+  list.innerHTML="<p>Henüz ilan bulunmuyor.</p>";
+  return;
+ }
 
-  list.innerHTML="";
+ list.innerHTML="";
 
-  data.forEach(p=>{
-    const item=document.createElement("div");
-    item.className="listing";
+ data.forEach(p=>{
+  const item=document.createElement("div");
+  item.className="listing";
 
-    const title=document.createElement("h4");
-    title.textContent=p.title || "Başlıksız ilan";
+  const title=document.createElement("h3");
+  title.textContent=p.title||"Başlıksız ilan";
 
-    const details=document.createElement("p");
-    details.textContent=
-      (p.type || "")+" | "+
-      (p.category || "")+" | "+
-      (p.location || "")+" | "+
-      (p.price ? Number(p.price).toLocaleString("tr-TR")+" ₺":"");
+  const details=document.createElement("p");
+  details.textContent=[
+   p.type||"",p.category||"",p.location||"",
+   p.price?Number(p.price).toLocaleString("tr-TR")+" ₺":""
+  ].filter(Boolean).join(" | ");
 
-    const description=document.createElement("p");
-    description.textContent=p.description || "";
+  const desc=document.createElement("p");
+  desc.textContent=p.description||"";
 
-    const actions=document.createElement("div");
-    actions.className="actions";
+  const photoBox=document.createElement("div");
+  photoBox.className="photos";
 
-    const editBtn=document.createElement("button");
-    editBtn.className="edit";
-    editBtn.textContent="Düzenle";
-    editBtn.onclick=()=>editProperty(p);
-
-    const deleteBtn=document.createElement("button");
-    deleteBtn.className="delete";
-    deleteBtn.textContent="Sil";
-    deleteBtn.onclick=()=>deleteProperty(p.id);
-
-    actions.append(editBtn,deleteBtn);
-    item.append(title,details,description,actions);
-    list.appendChild(item);
+  const urls=Array.isArray(p.images)?p.images:(p.image_url?[p.image_url]:[]);
+  urls.forEach(url=>{
+   const img=document.createElement("img");
+   img.src=url;
+   img.alt=p.title||"İlan fotoğrafı";
+   photoBox.appendChild(img);
   });
+
+  const actions=document.createElement("div");
+  actions.className="actions";
+
+  const edit=document.createElement("button");
+  edit.className="edit";
+  edit.textContent="Düzenle";
+  edit.onclick=()=>editProperty(p);
+
+  const del=document.createElement("button");
+  del.className="delete";
+  del.textContent="Sil";
+  del.onclick=()=>deleteProperty(p.id);
+
+  actions.append(edit,del);
+  item.append(title,details,desc,photoBox,actions);
+  list.appendChild(item);
+ });
 }
 
 document.getElementById("propertyForm").addEventListener("submit",async e=>{
-  e.preventDefault();
+ e.preventDefault();
 
-  const status=document.getElementById("status");
-  const saveBtn=document.getElementById("saveBtn");
+ const status=document.getElementById("status");
+ const saveBtn=document.getElementById("saveBtn");
+ saveBtn.disabled=true;
+ status.textContent="Kaydediliyor...";
 
-  status.textContent="Kaydediliyor...";
-  saveBtn.disabled=true;
+ const files=Array.from(document.getElementById("photos").files);
+ let uploadedUrls=[...existingImages];
 
-  let photoUrl=null;
-  const file=document.getElementById("photo").files[0];
+ for(const file of files){
+  const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
+  const path=Date.now()+"_"+Math.random().toString(36).slice(2)+"_"+safeName;
 
-  if(file){
-    const fileName=Date.now()+"_"+file.name.replace(/\s/g,"_");
+  const {data,error}=await db.storage.from("property-images").upload(path,file);
 
-    const {data:uploadData,error:uploadError}=await db.storage
-      .from("property-images")
-      .upload(fileName,file);
-
-    if(uploadError){
-      status.textContent="Fotoğraf yüklenemedi: "+uploadError.message;
-      saveBtn.disabled=false;
-      return;
-    }
-
-    const {data:urlData}=db.storage
-      .from("property-images")
-      .getPublicUrl(uploadData.path);
-
-    photoUrl=urlData.publicUrl;
+  if(error){
+   status.textContent="Fotoğraf yüklenemedi: "+error.message;
+   saveBtn.disabled=false;
+   return;
   }
 
-  const property={
-    title:document.getElementById("title").value,
-    type:document.getElementById("type").value,
-    category:document.getElementById("category").value,
-    price:Number(document.getElementById("price").value),
-    location:document.getElementById("location").value,
-    rooms:document.getElementById("rooms").value,
-    area:Number(document.getElementById("area").value)||null,
-    description:document.getElementById("description").value
-  };
+  const {data:urlData}=db.storage.from("property-images").getPublicUrl(data.path);
+  uploadedUrls.push(urlData.publicUrl);
+ }
 
-  if(photoUrl) property.image_url=photoUrl;
+ const property={
+  title:document.getElementById("title").value.trim(),
+  type:document.getElementById("type").value,
+  category:document.getElementById("category").value,
+  price:Number(document.getElementById("price").value),
+  location:document.getElementById("location").value.trim(),
+  rooms:document.getElementById("rooms").value.trim(),
+  area:Number(document.getElementById("area").value)||null,
+  description:document.getElementById("description").value.trim(),
+  images:uploadedUrls
+ };
 
-  let result;
+ let result;
 
-  if(editingId){
-    result=await db.from("properties").update(property).eq("id",editingId);
-  }else{
-    result=await db.from("properties").insert(property);
-  }
+ if(editingId){
+  result=await db.from("properties").update(property).eq("id",editingId);
+ }else{
+  result=await db.from("properties").insert(property);
+ }
 
-  saveBtn.disabled=false;
+ saveBtn.disabled=false;
 
-  if(result.error){
-    status.textContent="Hata: "+result.error.message;
-    return;
-  }
+ if(result.error){
+  status.textContent="Kaydetme hatası: "+result.error.message;
+  return;
+ }
 
-  status.textContent="İlan başarıyla kaydedildi!";
-  resetForm();
-  loadProperties();
+ status.textContent="İlan başarıyla kaydedildi!";
+ resetForm();
+ await loadProperties();
 });
 
 function editProperty(p){
-  editingId=p.id;
+ editingId=p.id;
+ existingImages=Array.isArray(p.images)?[...p.images]:(p.image_url?[p.image_url]:[]);
 
-  document.getElementById("formTitle").textContent="İlanı Düzenle";
-  document.getElementById("saveBtn").textContent="Değişiklikleri Kaydet";
+ document.getElementById("formTitle").textContent="İlanı Düzenle";
+ document.getElementById("saveBtn").textContent="Değişiklikleri Kaydet";
 
-  document.getElementById("title").value=p.title||"";
-  document.getElementById("type").value=p.type||"";
-  document.getElementById("category").value=p.category||"";
-  document.getElementById("price").value=p.price||"";
-  document.getElementById("location").value=p.location||"";
-  document.getElementById("rooms").value=p.rooms||"";
-  document.getElementById("area").value=p.area||"";
-  document.getElementById("description").value=p.description||"";
+ document.getElementById("title").value=p.title||"";
+ document.getElementById("type").value=p.type||"";
+ document.getElementById("category").value=p.category||"";
+ document.getElementById("price").value=p.price||"";
+ document.getElementById("location").value=p.location||"";
+ document.getElementById("rooms").value=p.rooms||"";
+ document.getElementById("area").value=p.area||"";
+ document.getElementById("description").value=p.description||"";
 
-  window.scrollTo({top:0,behavior:"smooth"});
+ renderCurrentPhotos();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function renderCurrentPhotos(){
+ const box=document.getElementById("currentPhotos");
+ box.innerHTML="";
+
+ existingImages.forEach((url,index)=>{
+  const wrap=document.createElement("div");
+  wrap.style.position="relative";
+
+  const img=document.createElement("img");
+  img.src=url;
+
+  const btn=document.createElement("button");
+  btn.type="button";
+  btn.textContent="×";
+  btn.style.cssText="position:absolute;top:0;right:0;padding:3px 8px;background:#b83232;color:white";
+  btn.onclick=()=>{
+   existingImages.splice(index,1);
+   renderCurrentPhotos();
+  };
+
+  wrap.append(img,btn);
+  box.appendChild(wrap);
+ });
 }
 
 async function deleteProperty(id){
-  if(!confirm("Bu ilanı silmek istediğine emin misin?"))return;
+ if(!confirm("Bu ilanı silmek istediğinize emin misiniz?"))return;
 
-  const {error}=await db.from("properties").delete().eq("id",id);
+ const {error}=await db.from("properties").delete().eq("id",id);
 
-  if(error){
-    alert("Silinemedi: "+error.message);
-    return;
-  }
+ if(error){
+  alert("Silinemedi: "+error.message);
+  return;
+ }
 
-  alert("İlan silindi.");
-  loadProperties();
+ alert("İlan silindi.");
+ loadProperties();
 }
 
 function resetForm(){
-  document.getElementById("propertyForm").reset();
-  editingId=null;
-  document.getElementById("formTitle").textContent="Yeni İlan Ekle";
-  document.getElementById("saveBtn").textContent="İlanı Kaydet";
-  document.getElementById("status").textContent="";
+ document.getElementById("propertyForm").reset();
+ document.getElementById("currentPhotos").innerHTML="";
+ editingId=null;
+ existingImages=[];
+ document.getElementById("formTitle").textContent="Yeni İlan Ekle";
+ document.getElementById("saveBtn").textContent="İlanı Kaydet";
+ document.getElementById("status").textContent="";
 }
 
 (async()=>{
-  const {data}=await db.auth.getSession();
-  if(data.session)showPanel();
+ const {data}=await db.auth.getSession();
+ if(data.session)showPanel();
 })();
 </script>
-
 </body>
 </html>
