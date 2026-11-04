@@ -3,77 +3,336 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Doğan Aydoğan Gayrimenkul | Admin</title>
-</head>
-<body style="font-family:Arial;background:#f4f4f4;padding:20px">
-<h1>DOĞAN AYDOĞAN GAYRİMENKUL</h1>
-<h2>Yönetici Paneli</h2>
-
-<div id="login">
-<input id="email" type="email" placeholder="E-posta"><br><br>
-<input id="password" type="password" placeholder="Şifre"><br><br>
-<button onclick="login()">Giriş Yap</button>
-</div>
-
-<div id="panel" style="display:none">
-<h2>Yeni İlan Ekle</h2>
-<input id="title" placeholder="İlan başlığı"><br><br>
-<input id="price" type="number" placeholder="Fiyat"><br><br>
-<input id="location" placeholder="Konum"><br><br>
-<textarea id="description" placeholder="Açıklama"></textarea><br><br>
-<button onclick="addProperty()">İlanı Kaydet</button>
-<button onclick="logout()">Çıkış</button>
-<h2>İlanlarım</h2>
-<div id="list"></div>
-</div>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doğan Aydoğan | Yönetim Paneli</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  background:#f4f1eb;
+  color:#171717;
+  font-family:Arial,sans-serif;
+}
+header{
+  background:#111820;
+  color:white;
+  padding:22px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+header h2{margin:0;font-size:20px}
+header button{background:#c6a269;color:#111}
+.container{max-width:1100px;margin:30px auto;padding:20px}
+.card{
+  background:white;
+  padding:25px;
+  border-radius:8px;
+  margin-bottom:25px;
+  box-shadow:0 4px 20px #00000008;
+}
+h3{margin-top:0}
+input,select,textarea{
+  width:100%;
+  padding:13px;
+  margin:8px 0 16px;
+  border:1px solid #ddd;
+  border-radius:5px;
+  font-size:15px;
+}
+textarea{min-height:110px;resize:vertical}
+button{
+  padding:13px 20px;
+  border:0;
+  border-radius:5px;
+  background:#c6a269;
+  cursor:pointer;
+  font-weight:bold;
+}
+button:hover{opacity:.85}
+.logout{background:#333;color:white}
+.listing{
+  border:1px solid #eee;
+  padding:18px;
+  border-radius:6px;
+  margin:12px 0;
+}
+.listing h4{margin:0 0 8px;font-size:18px}
+.actions{display:flex;gap:10px;margin-top:12px}
+.delete{background:#b83232;color:white}
+.edit{background:#222;color:white}
+#status{margin:12px 0;font-weight:bold}
+.hidden{display:none}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h2>DOĞAN AYDOĞAN GAYRİMENKUL</h2>
+  <button class="logout" onclick="logout()">Çıkış Yap</button>
+</header>
+
+<div class="container">
+
+  <div class="card" id="loginCard">
+    <h3>Yönetici Girişi</h3>
+    <input id="email" type="email" placeholder="E-posta adresiniz">
+    <input id="password" type="password" placeholder="Şifreniz">
+    <button onclick="login()">Giriş Yap</button>
+    <p id="loginStatus"></p>
+  </div>
+
+  <div class="card hidden" id="panel">
+    <h3 id="formTitle">Yeni İlan Ekle</h3>
+
+    <form id="propertyForm">
+      <input id="title" placeholder="İlan başlığı" required>
+
+      <select id="type" required>
+        <option value="">İlan türü seçin</option>
+        <option value="Satılık">Satılık</option>
+        <option value="Kiralık">Kiralık</option>
+      </select>
+
+      <select id="category" required>
+        <option value="">Gayrimenkul türü</option>
+        <option value="Daire">Daire</option>
+        <option value="Villa">Villa</option>
+        <option value="Arsa">Arsa</option>
+        <option value="İş Yeri">İş Yeri</option>
+        <option value="Tarla">Tarla</option>
+        <option value="Bina">Bina</option>
+        <option value="Diğer">Diğer</option>
+      </select>
+
+      <input id="price" type="number" placeholder="Fiyat (₺)" required>
+      <input id="location" placeholder="Konum (Örn: Mardin / Kızıltepe)" required>
+      <input id="rooms" placeholder="Oda sayısı (Örn: 3+1)">
+      <input id="area" type="number" placeholder="Metrekare (m²)">
+
+      <textarea id="description" placeholder="İlan açıklaması"></textarea>
+
+      <label>İlan fotoğrafı</label>
+      <input id="photo" type="file" accept="image/*">
+
+      <button type="submit" id="saveBtn">İlanı Kaydet</button>
+      <button type="button" onclick="resetForm()" style="background:#ddd">Temizle</button>
+
+      <p id="status"></p>
+    </form>
+  </div>
+
+  <div class="card hidden" id="listingCard">
+    <h3>Yayındaki İlanlar</h3>
+    <div id="list">İlanlar yükleniyor...</div>
+  </div>
+
+</div>
+
 <script>
-const db = supabase.createClient(
-"https://wnululhsotwjfwhrtzwj.supabase.co",
-"sb_publishable_epHhCf6NdasScFDBIcSaOg_TKOjjjkO"
-);
+const SUPABASE_URL = "https://wnululhsotwjfwhrtzwj.supabase.co";
+const SUPABASE_KEY = "sb_publishable_epHhCf6NdasScFDBIcSaOg_TKOjjjkO";
+
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let editingId = null;
 
 async function login(){
-const {error}=await db.auth.signInWithPassword({
-email:document.getElementById("email").value,
-password:document.getElementById("password").value
-});
-if(error){alert("Giriş başarısız: "+error.message);return;}
-document.getElementById("login").style.display="none";
-document.getElementById("panel").style.display="block";
-loadProperties();
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  const {data,error} = await db.auth.signInWithPassword({email,password});
+
+  if(error){
+    document.getElementById("loginStatus").textContent = error.message;
+    return;
+  }
+
+  showPanel();
+}
+
+async function showPanel(){
+  document.getElementById("loginCard").classList.add("hidden");
+  document.getElementById("panel").classList.remove("hidden");
+  document.getElementById("listingCard").classList.remove("hidden");
+  loadProperties();
 }
 
 async function logout(){
-await db.auth.signOut();
-location.reload();
-}
-
-async function addProperty(){
-const {error}=await db.from("properties").insert({
-title:document.getElementById("title").value,
-price:Number(document.getElementById("price").value),
-location:document.getElementById("location").value,
-description:document.getElementById("description").value
-});
-if(error){alert(error.message);return;}
-alert("İlan kaydedildi!");
-loadProperties();
+  await db.auth.signOut();
+  location.reload();
 }
 
 async function loadProperties(){
-const {data,error}=await db.from("properties").select("*");
-if(error){alert(error.message);return;}
-document.getElementById("list").innerHTML=data.map(p=>
-`<div style="background:white;padding:15px;margin:10px">
-<h3>${p.title}</h3>
-<p>${p.location||""}</p>
-<strong>${p.price||""} ₺</strong>
-</div>`
-).join("");
+  const {data,error} = await db
+    .from("properties")
+    .select("*")
+    .order("created_at",{ascending:false});
+
+  if(error){
+    document.getElementById("list").textContent = error.message;
+    return;
+  }
+
+  const list = document.getElementById("list");
+
+  if(!data || data.length===0){
+    list.innerHTML="<p>Henüz ilan bulunmuyor.</p>";
+    return;
+  }
+
+  list.innerHTML="";
+
+  data.forEach(p=>{
+    const item=document.createElement("div");
+    item.className="listing";
+
+    const title=document.createElement("h4");
+    title.textContent=p.title || "Başlıksız ilan";
+
+    const details=document.createElement("p");
+    details.textContent=
+      (p.type || "")+" | "+
+      (p.category || "")+" | "+
+      (p.location || "")+" | "+
+      (p.price ? Number(p.price).toLocaleString("tr-TR")+" ₺":"");
+
+    const description=document.createElement("p");
+    description.textContent=p.description || "";
+
+    const actions=document.createElement("div");
+    actions.className="actions";
+
+    const editBtn=document.createElement("button");
+    editBtn.className="edit";
+    editBtn.textContent="Düzenle";
+    editBtn.onclick=()=>editProperty(p);
+
+    const deleteBtn=document.createElement("button");
+    deleteBtn.className="delete";
+    deleteBtn.textContent="Sil";
+    deleteBtn.onclick=()=>deleteProperty(p.id);
+
+    actions.append(editBtn,deleteBtn);
+    item.append(title,details,description,actions);
+    list.appendChild(item);
+  });
 }
+
+document.getElementById("propertyForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+
+  const status=document.getElementById("status");
+  const saveBtn=document.getElementById("saveBtn");
+
+  status.textContent="Kaydediliyor...";
+  saveBtn.disabled=true;
+
+  let photoUrl=null;
+  const file=document.getElementById("photo").files[0];
+
+  if(file){
+    const fileName=Date.now()+"_"+file.name.replace(/\s/g,"_");
+
+    const {data:uploadData,error:uploadError}=await db.storage
+      .from("property-images")
+      .upload(fileName,file);
+
+    if(uploadError){
+      status.textContent="Fotoğraf yüklenemedi: "+uploadError.message;
+      saveBtn.disabled=false;
+      return;
+    }
+
+    const {data:urlData}=db.storage
+      .from("property-images")
+      .getPublicUrl(uploadData.path);
+
+    photoUrl=urlData.publicUrl;
+  }
+
+  const property={
+    title:document.getElementById("title").value,
+    type:document.getElementById("type").value,
+    category:document.getElementById("category").value,
+    price:Number(document.getElementById("price").value),
+    location:document.getElementById("location").value,
+    rooms:document.getElementById("rooms").value,
+    area:Number(document.getElementById("area").value)||null,
+    description:document.getElementById("description").value
+  };
+
+  if(photoUrl) property.image_url=photoUrl;
+
+  let result;
+
+  if(editingId){
+    result=await db.from("properties").update(property).eq("id",editingId);
+  }else{
+    result=await db.from("properties").insert(property);
+  }
+
+  saveBtn.disabled=false;
+
+  if(result.error){
+    status.textContent="Hata: "+result.error.message;
+    return;
+  }
+
+  status.textContent="İlan başarıyla kaydedildi!";
+  resetForm();
+  loadProperties();
+});
+
+function editProperty(p){
+  editingId=p.id;
+
+  document.getElementById("formTitle").textContent="İlanı Düzenle";
+  document.getElementById("saveBtn").textContent="Değişiklikleri Kaydet";
+
+  document.getElementById("title").value=p.title||"";
+  document.getElementById("type").value=p.type||"";
+  document.getElementById("category").value=p.category||"";
+  document.getElementById("price").value=p.price||"";
+  document.getElementById("location").value=p.location||"";
+  document.getElementById("rooms").value=p.rooms||"";
+  document.getElementById("area").value=p.area||"";
+  document.getElementById("description").value=p.description||"";
+
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+async function deleteProperty(id){
+  if(!confirm("Bu ilanı silmek istediğine emin misin?"))return;
+
+  const {error}=await db.from("properties").delete().eq("id",id);
+
+  if(error){
+    alert("Silinemedi: "+error.message);
+    return;
+  }
+
+  alert("İlan silindi.");
+  loadProperties();
+}
+
+function resetForm(){
+  document.getElementById("propertyForm").reset();
+  editingId=null;
+  document.getElementById("formTitle").textContent="Yeni İlan Ekle";
+  document.getElementById("saveBtn").textContent="İlanı Kaydet";
+  document.getElementById("status").textContent="";
+}
+
+(async()=>{
+  const {data}=await db.auth.getSession();
+  if(data.session)showPanel();
+})();
 </script>
+
 </body>
 </html>
